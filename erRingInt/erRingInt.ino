@@ -29,8 +29,7 @@ bool buttonState = true; // variable to hold the button state
 
 volatile byte state = LOW; // Initialize the IR sensor triggered state to LOW
 
-void setup()
-{
+void setup() {
   pinMode(signalPin, OUTPUT);       // Set the ATtiny45 signal pin
   pinMode(onOffButtonPin, INPUT);   // Set the digital pin for the ATTiny45 On/Off input
   pinMode(testOnOffLedPin, OUTPUT); // Set the digital pin testOnOffLedPin (indicates the ATTiny45 power is set on/off) as output
@@ -47,31 +46,25 @@ void setup()
   digitalWrite(triggerLedPin, LOW);
 }
 
-void loop()
-{
+void loop() {
   buttonState = digitalRead(onOffButtonPin);
-  if (buttonState == LOW)
-  {
+  if (buttonState == LOW) {
     digitalWrite(signalPin, HIGH);
     digitalWrite(testOnOffLedPin, HIGH);
     onOffState = true;
-  }
-  else
-  {
+  } else {
     digitalWrite(signalPin, LOW);
     digitalWrite(testOnOffLedPin, LOW);
     onOffState = false;
     state = LOW;
   }
 
-  if (onOffState)
-  {
+  if (onOffState) {
     digitalWrite(ledPin, !state);
     digitalWrite(triggerLedPin, state);
   }
 }
 
-void blink()
-{
+void blink() {
   state = !state;
 }
