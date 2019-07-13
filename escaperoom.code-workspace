@@ -6,6 +6,13 @@
 	],
 	"settings": {
 		"arduino.defaultBaudRate": 9600,
-		"terminal.integrated.fontSize": 14
+		"terminal.integrated.fontSize": 14,
+		"sqltools.connections": [
+			{
+				"database": "./quizShow.db",
+				"dialect": "SQLite",
+				"name": "quizShow"
+			}
+		]
 	}
 }
