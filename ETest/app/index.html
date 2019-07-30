@@ -62,6 +62,7 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>Quiz show</h1>
@@ -86,4 +87,28 @@
     </div>
   </footer>
 
+  <script>
+    const { ipcRenderer } = require('electron')
+
+    const listener = (channel, query) => {
+      ipcRenderer.on(channel, (evt, arg) => {
+        document.querySelector(query).innerText = arg
+      })
+    }
+
+    const listenerAnswer = label => {
+      let q = '#' + label + ' answer'
+      listener(label, q)
+      listener(label + 'correct', q)
+    }
+
+    listener('question', '#question')
+    listenerAnswer('a')
+    listenerAnswer('b')
+    listenerAnswer('c')
+    listenerAnswer('d')
+    listener('score', '#score')
+    listener('round_time', '#round_time')
+    listener('game_time', '#game_time')
+  </script>
 </body>

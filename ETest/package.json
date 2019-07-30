@@ -11,5 +11,8 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "electron": "^6.0.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
