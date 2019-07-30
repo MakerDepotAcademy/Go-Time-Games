@@ -88,6 +88,7 @@
   </footer>
 
   <script>
+    debugger;
     const { ipcRenderer } = require('electron')
 
     const listener = (channel, query) => {
@@ -97,7 +98,7 @@
     }
 
     const listenerAnswer = label => {
-      let q = '#' + label + ' answer'
+      let q = '#' + label + ' #answer'
       listener(label, q)
       listener(label + 'correct', q)
     }

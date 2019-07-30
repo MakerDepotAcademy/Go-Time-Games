@@ -18,7 +18,12 @@ function updateUI(channel, msg, res) {
 }
 
 api.use(bodyParser.urlencoded({ extended: false }))
-api.use(bodyParser.json())
+api.use((req, res, next) => {
+  req.body = Object.keys(req.body)[0]
+  next()
+})
+// api.use(bodyParser.json())
+// api.use(bodyParser.raw())
 
 api.get('/', (req, res) => {
   if (win) {
@@ -39,7 +44,7 @@ api.post('/question', (req, res) => {
 })
 
 api.post('/answer/:label', (req, res) => {
-  updateUI(req.param.label, req.body, res)
+  updateUI(req.params.label, req.body, res)
 })
 
 api.post('/start', (req, res) => {
