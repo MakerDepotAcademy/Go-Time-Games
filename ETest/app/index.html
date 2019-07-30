@@ -60,6 +60,15 @@
     h1 {
       font-size: 60px
     }
+
+    .hidden {
+      display: none
+    }
+
+    .alert {
+      background-color: red;
+      color: white;
+    }
   </style>
 </head>
 
@@ -69,6 +78,9 @@
   </header>
 
   <h2 id="question"></h2>
+
+  <h1 id="roundsup" class="hidden alert">Round's up</h1>
+  <h1 id="gameover" class="hidden alert">Game over</h1>
   
   <div class="container">
     <div id="a" class="box"><span class="label">A:</span>&nbsp;<span id="answer"></span></div>
@@ -88,11 +100,11 @@
   </footer>
 
   <script>
-    debugger;
     const { ipcRenderer } = require('electron')
 
     const listener = (channel, query) => {
       ipcRenderer.on(channel, (evt, arg) => {
+        debugger;
         document.querySelector(query).innerText = arg
       })
     }
@@ -109,7 +121,19 @@
     listenerAnswer('c')
     listenerAnswer('d')
     listener('score', '#score')
-    listener('round_time', '#round_time')
-    listener('game_time', '#game_time')
+    listener('roundtick', '#round_time')
+    listener('gametick', '#game_time')
+
+    ipcRenderer.on('roundsup', (evt, arg) => {
+      debugger
+      let el = document.querySelector('#roundsup')
+      el.classList.remove('hidden')
+      setTimeout(() => el.classList.add('hidden'), 2000)
+    })
+
+    ipcRenderer.on('gameover', (evt, arg) => {
+      debugger
+      document.querySelector('#gameover').classList.remove()
+    })
   </script>
 </body>
