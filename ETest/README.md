@@ -44,6 +44,9 @@ ROUND_SECONDS = 6
 
 # How long the game is
 GAME_SECONDS = 360
+
+# Link to preable video
+PREAMBLE_VIDEO = http://localhost:3000/path/to/video
 ```
 
 ## Usage
@@ -138,9 +141,10 @@ Adds an event hook to the game. Each time an event is triggered, every url subsc
 
 #### Events:
 
-* `roundover`: emitted when the round timer reaches 0
-* `gameover`: emitted when game is over
-* `scorechanged`: emitted when score is changed
+* `roundover`: emits when the round timer reaches 0
+* `gameover`: emits when game is over
+* `scorechanged`: emits when score is changed
+* `videoended`: emits when preable video is over
 
 #### Example:
 

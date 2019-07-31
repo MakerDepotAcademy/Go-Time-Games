@@ -122,6 +122,10 @@ api.get('/score', (req, res) => {
   res.status(200).send("" + score)
 })
 
+ipcMain.once('videoended', (evt, arg) => {
+  GameEvents.emit('videoended')
+})
+
 app.on('ready', () => {
   // Create the browser window.
   win = new BrowserWindow({
@@ -130,7 +134,8 @@ app.on('ready', () => {
     frame: false,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    webSecurity: false
   })
   win.maximize()
   win.loadFile('app/index.html')

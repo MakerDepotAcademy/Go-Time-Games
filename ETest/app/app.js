@@ -30,3 +30,12 @@ ipcRenderer.on("roundsup", (evt, arg) => {
 ipcRenderer.on("gameover", (evt, arg) => {
   document.querySelector("#gameover").classList.remove();
 });
+
+var vid = document.querySelector('video')
+vid.src = process.env.PREAMBLE_VIDEO
+vid.load()
+vid.play()
+vid.addEventListener('ended', () => {
+  vid.classList.add('hidden')
+  ipcRenderer.send('videoended')
+})
