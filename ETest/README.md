@@ -8,13 +8,23 @@ This is the display component of the quiz show
     - [GET /](#get)
     - [DELETE /](#delete)
     - [POST /question](#post-question)
+      - [Example:](#example)
     - [POST /answer/:label](#post-answerlabel)
+      - [Example:](#example-1)
     - [POST /answer/:label/correct](#post-answerlabelcorrect)
     - [POST /start](#post-start)
+      - [Example:](#example-2)
     - [GET /score](#get-score)
+      - [Example:](#example-3)
     - [POST /score](#post-score)
+      - [Example:](#example-4)
     - [POST /score/inc](#post-scoreinc)
+      - [Example:](#example-5)
     - [POST /score/dec](#post-scoredec)
+      - [Example:](#example-6)
+    - [POST /subscribe/:event](#post-subscribeevent)
+      - [Events:](#events)
+      - [Example:](#example-7)
 
 ## Installation
 
@@ -39,7 +49,7 @@ Quits the display
 
 Sets the question to display
 
-Example:
+#### Example:
 
 ```bash 
 curl -i http://localhost:8080/question -X POST -d 'What is my name'
@@ -49,7 +59,7 @@ curl -i http://localhost:8080/question -X POST -d 'What is my name'
 
 Set the answer to a question. `:label` must be in `/[a-d]/`
 
-Example:
+#### Example:
 
 ```bash
 curl -i http://localhost:8080/answer/a -X POST -d 'Dan'
@@ -63,7 +73,7 @@ Changes the answer of content in `:label` to correct. Halts the round
 
 Starts the round. If this is the first call, will also start game timer
 
-Example:
+#### Example:
 
 ```bash
 curl -i http://localhost:8080/start -X POST
@@ -73,7 +83,7 @@ curl -i http://localhost:8080/start -X POST
 
 Returns the current score
 
-Example:
+#### Example:
 
 ```bash
 curl -i http://localhost:8080/score
@@ -83,7 +93,7 @@ curl -i http://localhost:8080/score
 
 Sets the score
 
-Example:
+#### Example:
 
 ```bash
 curl -i http://localhost:8080/score -X POST -d '100'
@@ -93,7 +103,7 @@ curl -i http://localhost:8080/score -X POST -d '100'
 
 Adds to the score
 
-Example:
+#### Example:
 
 ```bash
 curl -i http://localhost:8080/score/inc -X POST -d '10'
@@ -103,8 +113,24 @@ curl -i http://localhost:8080/score/inc -X POST -d '10'
 
 Subtracts to the score
 
-Example:
+#### Example:
 
 ```bash
 curl -i http://localhost:8080/score/dec -X POST -d '10'
+```
+
+### POST /subscribe/:event
+
+Adds an event hook to the game. Each time an event is triggered, every url subscribed will receive an empty `GET` request.
+
+#### Events:
+
+* `roundover`: emitted when the round timer reaches 0
+* `gameover`: emitted when game is over
+* `scorechanged`: emitted when score is changed
+
+#### Example:
+
+```bash
+curl -i http://localhost:8080/subscribe/gameover -X POST -d 'http://192.168.*.*/thegameisover'
 ```

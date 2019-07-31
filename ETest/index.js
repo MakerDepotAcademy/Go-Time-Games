@@ -1,8 +1,13 @@
+require('dotenv').config()
+
 const { app, BrowserWindow, ipcMain } = require('electron')
+const EventEmitter = require('events')
+const request = require('request')
 var bodyParser = require('body-parser')
 var api = require('express')()
 var win
-var score = 0, roundTicksLimit = roundTicks = 6, gameTicksLimit = gameTicks = 6 * 60, roundTicker, gameTicker
+var score = 0, roundTicksLimit = roundTicks = parseInt(process.env.ROUND_SECONDS), gameTicksLimit = gameTicks = parseInt(process.env.GAME_SECONDS), roundTicker, gameTicker
+GameEvents = new EventEmitter()
 
 function updateUI(channel, msg, res) {
   if (win) {
@@ -62,6 +67,7 @@ api.post('/start', (req, res) => {
       updateUI('roundsup', '')
       roundTicks = roundTicksLimit
       clearInterval(roundTicker)
+      GameEvents.emit('roundover')
     }
   }, 1000)
 
@@ -70,6 +76,7 @@ api.post('/start', (req, res) => {
       updateUI('gametick', gameTicks)
       if (gameTicks-- < 1) {
         updateUI('gameover', '')
+        GameEvents.emit('gameover')
       }
     }, 1000)
   }
@@ -94,23 +101,32 @@ const parseIntBody = (req, res, next) => {
   next()
 }
 
-api.post('/score', parseIntBody, (req, res) => {
+const scoreChanged = (req, res, next) => {
+  updateUI('score', score, res);
+  GameEvents.emit('scorechanged')
+}
+
+api.post('/score', parseIntBody, (req, res, next) => {
   score = req.body
-  updateUI('score', score, res);
-})
+}, scoreChanged)
 
-api.post('/score/inc', parseIntBody, (req, res) => {
+api.post('/score/inc', parseIntBody, (req, res, next) => {
   score += req.body
-  updateUI('score', score, res);
-})
+}, scoreChanged)
 
-api.post('/score/dec', parseIntBody, (req, res) => {
+api.post('/score/dec', parseIntBody, (req, res, next) => {
   score -= req.body
-  updateUI('score', score, res);
-})
+}, scoreChanged)
 
 api.get('/score', (req, res) => {
   res.status(200).send("" + score)
+})
+
+api.post('/subscribe/:event', (req, res) => {
+  GameEvents.on(req.params.event, () => {
+    request(req.body, (err, resp, body) => {})
+  })
+  res.status(200).send(req.body + ' is now subscribe to the ' + req.params.event + ' event')
 })
 
 app.on('ready', () => {
