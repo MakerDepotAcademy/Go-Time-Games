@@ -93,7 +93,7 @@ api.post('/start', (req, res) => {
 
 api.post('/answer/:label/correct', (req, res) => {
   clearInterval(roundTicker)
-  updateUI(req.param.label + 'correct', 'CORRECT', res)
+  updateUI(req.params.label + 'correct', 'CORRECT', res)
 })
 
 const parseIntBody = (req, res, next) => {
