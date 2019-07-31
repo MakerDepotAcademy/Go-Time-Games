@@ -4,6 +4,7 @@ This is the display component of the quiz show
 
 - [Quiz Show](#quiz-show)
   - [Installation](#installation)
+  - [.env Config](#env-config)
   - [Usage](#usage)
     - [GET /](#get)
     - [DELETE /](#delete)
@@ -31,6 +32,18 @@ This is the display component of the quiz show
 ``` bash
 cd ETest
 npm install
+```
+
+## .env Config
+
+Configuring the timers comes from the enviroment. Create a `.env` file next to `index.js` and then paste this in:
+
+```conf
+# How long each round is
+ROUND_SECONDS = 6
+
+# How long the game is
+GAME_SECONDS = 360
 ```
 
 ## Usage
