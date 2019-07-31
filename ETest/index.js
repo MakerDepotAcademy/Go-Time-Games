@@ -89,17 +89,22 @@ api.post('/answer/:label/correct', (req, res) => {
   updateUI(req.param.label + 'correct', 'CORRECT', res)
 })
 
-api.post('/score', (req, res) => {
+const parseIntBody = (req, res, next) => {
+  req.body = parseInt(req.body)
+  next()
+}
+
+api.post('/score', parseIntBody, (req, res) => {
   score = req.body
   updateUI('score', score, res);
 })
 
-api.post('/score/inc', (req, res) => {
+api.post('/score/inc', parseIntBody, (req, res) => {
   score += req.body
   updateUI('score', score, res);
 })
 
-api.post('/score/dec', (req, res) => {
+api.post('/score/dec', parseIntBody, (req, res) => {
   score -= req.body
   updateUI('score', score, res);
 })
