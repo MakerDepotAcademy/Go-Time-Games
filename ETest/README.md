@@ -76,7 +76,7 @@ Returns the current score
 Example:
 
 ```bash
-curl -i http://localhost:8080/store
+curl -i http://localhost:8080/score
 ```
 
 ### POST /score
