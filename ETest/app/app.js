@@ -2,7 +2,6 @@ const { ipcRenderer } = require("electron");
 
 const listener = (channel, query) => {
   ipcRenderer.on(channel, (evt, arg) => {
-    debugger;
     document.querySelector(query).innerText = arg;
   });
 };
@@ -23,13 +22,11 @@ listener("roundtick", "#round_time");
 listener("gametick", "#game_time");
 
 ipcRenderer.on("roundsup", (evt, arg) => {
-  debugger;
   let el = document.querySelector("#roundsup");
   el.classList.remove("hidden");
   setTimeout(() => el.classList.add("hidden"), 2000);
 });
 
 ipcRenderer.on("gameover", (evt, arg) => {
-  debugger;
   document.querySelector("#gameover").classList.remove();
 });
