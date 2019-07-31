@@ -122,13 +122,6 @@ api.get('/score', (req, res) => {
   res.status(200).send("" + score)
 })
 
-api.post('/subscribe/:event', (req, res) => {
-  GameEvents.on(req.params.event, () => {
-    request(req.body, (err, resp, body) => {})
-  })
-  res.status(200).send(req.body + ' is now subscribe to the ' + req.params.event + ' event')
-})
-
 app.on('ready', () => {
   // Create the browser window.
   win = new BrowserWindow({
