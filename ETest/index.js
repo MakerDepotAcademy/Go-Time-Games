@@ -110,15 +110,7 @@ api.post('/score/dec', parseIntBody, (req, res) => {
 })
 
 api.get('/score', (req, res) => {
-  if (win) {
-    ipcMain.once('score', (evt, arg) => {
-      res.status(200).send(arg)
-    })
-    win.webContents.send('score', 'give')
-  }
-  else {
-    res.status(500).send('No display')
-  }
+  res.status(200).send("" + score)
 })
 
 app.on('ready', () => {
@@ -126,11 +118,12 @@ app.on('ready', () => {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
     webPreferences: {
       nodeIntegration: true
     }
   })
-
+  win.maximize()
   win.loadFile('app/index.html')
   win.on('closed', () => {
     win = null
