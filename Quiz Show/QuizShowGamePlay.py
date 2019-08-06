@@ -28,7 +28,6 @@ def AskQuestions():
                         g.has_been_used = 0
                     ORDER BY
                         RANDOM() ASC
-                    LIMIT 1
                 ''')
         #result = {'trivia_question': [dict(zip(tuple(query.keys()), i))
         #                              for i in query.cursor]}    
@@ -41,24 +40,28 @@ def AskQuestions():
             print("blue: ", row['blue'])
             print("correct_answer: ", row['correct_answer'])
 
-        # Send question to the board and wait for answer
-        ans = input(row['question'])
-        if ans != row['correct_answer']:
-            print("Wrong")
-            score = score - 1
-        else:
-            print("CORRECT")
-            score = score + 1
+            # Send question to the board and wait for answer
+            ans = input(row['question'])
+            if ans != row['correct_answer']:
+                print("Wrong")
+                score = score - 1
+            else:
+                print("Correct Answer")
+                score = score + 1
 
-        if stopGameEvent.is_set():
-            AskQuestions = score
-            print("The final score was: %5d" % (score))
-            return score
-            break
+            if stopGameEvent.is_set():
+                AskQuestions = score
+                print("The final score was: %5d" % (score))
+                dbConnection.close()
+                return score
+                break
 
     dbConnection.close()
     return score
 
+#--------------------------------------------------------------------------------
+#- The Quiz Show Game
+#--------------------------------------------------------------------------------
 score = 0
 
 # Start Game loop
@@ -68,6 +71,8 @@ questionThread = Thread(target=AskQuestions)
 # Here we start the thread and we wait 6 seconds before the code continues to execute.
 questionThread.start()
 score = questionThread.join(timeout=6)
+if (isinstance(score, int) == False):
+    score = 0
 
 # We send a signal that the other thread should stop.
 stopGameEvent.set()
