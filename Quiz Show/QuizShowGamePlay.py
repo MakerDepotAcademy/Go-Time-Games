@@ -4,17 +4,17 @@ import time
 from threading import Thread, Event
 
 # Event object used to send signals from one thread to another
-stop_event = Event()
+stopGameEvent = Event()
 
 # Ask Questions
 def AskQuestions():
     score = 0
-    db_connect = create_engine('sqlite:///quizShow.db')
+    dbConnect = create_engine('sqlite:///quizShow.db')
 
-    conn = db_connect.connect()
+    dbConnection = dbConnect.connect()
     while (1):
         # Ask question and verify answer
-        query = conn.execute('''SELECT
+        query = dbConnection.execute('''SELECT
                         g.rowid,
                         g.QUESTION,
                         g.yellow,
@@ -50,26 +50,27 @@ def AskQuestions():
             print("CORRECT")
             score = score + 1
 
-        if stop_event.is_set():
+        if stopGameEvent.is_set():
             AskQuestions = score
             print("The final score was: %5d" % (score))
             return score
             break
 
-    conn.close()
+    dbConnection.close()
     return score
 
 score = 0
 
 # Start Game loop
-question_thread = Thread(target=AskQuestions)
+# Create Question thread
+questionThread = Thread(target=AskQuestions)
 
 # Here we start the thread and we wait 6 seconds before the code continues to execute.
-question_thread.start()
-score = question_thread.join(timeout=6)
+questionThread.start()
+score = questionThread.join(timeout=6)
 
 # We send a signal that the other thread should stop.
-stop_event.set()
+stopGameEvent.set()
 
-print("Hey there! I timed out! The Game is over!")
+print("Hey there! You timed out! The Game is over!")
 print("The final score was: %5d" % (score))
