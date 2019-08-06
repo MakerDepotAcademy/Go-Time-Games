@@ -2,9 +2,48 @@ import datetime
 from sqlalchemy import create_engine
 import time
 from threading import Thread, Event
+import requests
 
 # Event object used to send signals from one thread to another
 stopGameEvent = Event()
+
+class Display():
+
+    def __init__(self, address):
+        self._address = address
+
+    def _getEndpoint(self, endpoint):
+        return 'http://%s/%s' % (self._address, endpoint)
+
+    def _post(self, endpoint, payload):
+        return requests.post(_getEndpoint(endpoint), data=payload)
+
+    def setQuestion(self, question):
+        self._post('/question', question)
+
+    def setAnswer(self, label, answer):
+        self._post('/answer/%s' % label, answer)
+
+    def setCorrect(self, label):
+        self._post('/answer/%s/correct' % label, '')
+
+    def setScore(self, score):
+        self._post('/score', score)
+
+    def addScore(self, add):
+        self._post('/score/inc', add)
+
+    def subScore(self, sub):
+        self._post('/score/dec', sub)
+
+    def getScore(self):
+        rsp = requests.get(self._getEndpoint('/score'))
+        return int(rsp.content)
+
+    def start(self):
+        self._post('/start')
+
+D = Display('localhost:3000')
 
 # Ask Questions
 def AskQuestions():
@@ -40,14 +79,23 @@ def AskQuestions():
             print("blue: ", row['blue'])
             print("correct_answer: ", row['correct_answer'])
 
+            D.setAnswer('a', row['red'])
+            D.setAnswer('b', row['blue'])
+            D.setAnswer('c', row['yellow'])
+            D.setAnswer('d', row['green'])
+
             # Send question to the board and wait for answer
+            D.setQuestion(row['question'])
+            D.start()
             ans = input(row['question'])
             if ans != row['correct_answer']:
                 print("Wrong")
                 score = score - 1
             else:
                 print("Correct Answer")
+                D.setCorrect(ans)
                 score = score + 1
+            D.setScore(score)
 
             if stopGameEvent.is_set():
                 AskQuestions = score
@@ -70,6 +118,7 @@ questionThread = Thread(target=AskQuestions)
 
 # Here we start the thread and we wait 330 seconds before the code continues to execute.
 questionThread.start()
+D.start()
 score = questionThread.join(timeout=330)
 if (isinstance(score, int) == False):
     score = 0
