@@ -68,9 +68,9 @@ score = 0
 # Create Question thread
 questionThread = Thread(target=AskQuestions)
 
-# Here we start the thread and we wait 6 seconds before the code continues to execute.
+# Here we start the thread and we wait 330 seconds before the code continues to execute.
 questionThread.start()
-score = questionThread.join(timeout=6)
+score = questionThread.join(timeout=330)
 if (isinstance(score, int) == False):
     score = 0
 
