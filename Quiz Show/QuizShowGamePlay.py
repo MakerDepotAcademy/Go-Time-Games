@@ -58,6 +58,14 @@ def AskQuestions(TeamMemberCount=5):
         #                              for i in questionList.cursor]}
 
         for question in questionList:
+            # Mark question as used in database
+            cursorObj = dbConnection.cursor()
+            update_sql = '''UPDATE go_time_trivia AS g
+                SET g.has_been_used = ?
+                where g.rowid = ?'''
+            cursorObj.execute(update_sql, (1, question['rowid']))
+            dbConnection.commit()
+
             # Ask a not previously asked question and verify answer
             print('\n')
             print("rowid: ", question['rowid'])
